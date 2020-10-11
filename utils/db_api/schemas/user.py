@@ -20,8 +20,3 @@ class Birthday(TimedBaseModel):
     governor = Column(String(100), primary_key=True)
     date = Column(DateTime())
     query: sql.Select
-
-# #Функция создающая запись Birthday
-# async def add_birthday(governor:str, date:str):
-#     governor = Birthday(governor=governor, date=date)
-#     await governor.create()
