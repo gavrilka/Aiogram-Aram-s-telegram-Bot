@@ -1,57 +1,19 @@
 from asyncpg import UniqueViolationError
 from utils.db_api.db_gino import db
-from utils.db_api.schemas.user import User
+from utils.db_api.schemas.user import User, Birthday
 
-# async def get_user(self, user_id):
-#     user = await User.query.where(User.user_id == user_id).gino.first()
-#     return user
-#
-#
-# async def add_new_user(self, referral=None):
-#     user = types.User.get_current()
-#     old_user = await self.get_user(user.id)
-#     if old_user:
-#         return old_user
-#     new_user = User()
-#     new_user.user_id = user.id
-#     new_user.username = user.username
-#     new_user.full_name = user.full_name
-#
-#     # if referral:
-#     #     new_user.referral = int(referral)
-#     await new_user.create()
-#     return new_user
-#
-#
-# async def set_language(self, language):
-#     user_id = types.User.get_current().id
-#     user = await self.get_user(user_id)
-#     await user.update(language=language).apply()
-#
-#
-# async def count_users(self) -> int:
-#     total = await db.func.count(User.id).gino.scalar()
-#     return total
+async def next_birthday():
+    query = db.text("select governor, date, DATE_PART('doy', date) - DATE_PART('doy', NOW()) as days FROM birthdays WHERE DATE_PART('doy', date) - DATE_PART('doy', NOW()) > 0 ORDER BY 3 LIMIT 1")
+    row = await db.first(query)
+    return row
 
+async def add_birthday(governor:str, date:str):
+    governor = Birthday(governor=governor, date=date)
+    await governor.create()
 
-# async def check_referrals(self):
-#     bot = Bot.get_current()
-#     user_id = types.User.get_current().id
-#
-#     user = await User.query.where(User.user_id == user_id).gino.first()
-#     referrals = await User.query.where(User.referral == user.id).gino.all()
-#
-#     return ", ".join([
-#         f"{num + 1}. " + (await bot.get_chat(referral.user_id)).get_mention(as_html=True)
-#         for num, referral in enumerate(referrals)
-#     ])
-
-
-# async def show_items(self):
-#     items = await Item.query.gino.all()
-#
-#     return items
-
+async def update_birthday(governor:str, date:str):
+    governor = await Birthday.get(governor)
+    await governor.update(date=date).apply()
 
 async def add_user(id: int, name: str, username: str, language_code: str, email: str = None):
     try:

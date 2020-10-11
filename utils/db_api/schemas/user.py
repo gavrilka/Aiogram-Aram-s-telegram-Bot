@@ -1,8 +1,8 @@
-from sqlalchemy import Integer, Column, BigInteger, String, sql
+from sqlalchemy import Integer, Column, BigInteger, String, sql, DateTime, Sequence
 
 from utils.db_api.db_gino import TimedBaseModel
 
-#Старый код user
+#Класс таблицы user
 class User(TimedBaseModel):
     __tablename__ = 'users'
     id = Column(BigInteger, primary_key=True)
@@ -14,4 +14,14 @@ class User(TimedBaseModel):
 
     query: sql.Select
 
+#Класс таблицы birthday
+class Birthday(TimedBaseModel):
+    __tablename__ = 'birthdays'
+    governor = Column(String(100), primary_key=True)
+    date = Column(DateTime())
+    query: sql.Select
 
+# #Функция создающая запись Birthday
+# async def add_birthday(governor:str, date:str):
+#     governor = Birthday(governor=governor, date=date)
+#     await governor.create()
