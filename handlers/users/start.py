@@ -4,12 +4,11 @@ from aiogram.dispatcher.filters.builtin import CommandStart
 from loader import dp
 # Добавляем db_gino
 from utils.db_api import quick_commands as commands
-
-#новый user
-import utils.db_api.db_gino
+# Добавляем фильтр IsPrivate
+from filters import IsPrivate
 
 # Переписали команду старт под db_gino
-@dp.message_handler(CommandStart())
+@dp.message_handler(CommandStart(), IsPrivate())
 async def bot_start(message: types.Message):
     name = message.from_user.full_name
     username = message.from_user.username

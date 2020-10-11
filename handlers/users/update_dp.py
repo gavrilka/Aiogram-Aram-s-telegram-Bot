@@ -5,9 +5,10 @@ from aiogram.utils.markdown import hcode
 
 from loader import dp
 from utils.db_api import quick_commands as commands
+# Добавляем фильтр IsPrivate
+from filters import IsPrivate
 
-
-@dp.message_handler(Command("email"))
+@dp.message_handler(Command("email"), IsPrivate())
 async def bot_start(message: types.Message, state: FSMContext):
     await message.answer("Пришли мне свой имейл")
     await state.set_state("email")
