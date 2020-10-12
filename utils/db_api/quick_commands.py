@@ -3,7 +3,11 @@ from utils.db_api.db_gino import db
 from utils.db_api.schemas.user import User, Birthday
 
 async def next_birthday():
-    query = db.text("select governor, date, DATE_PART('doy', date) - DATE_PART('doy', NOW()) as days FROM birthdays WHERE DATE_PART('doy', date) - DATE_PART('doy', NOW()) > 0 ORDER BY 3 LIMIT 1")
+    query_old = db.text("select governor, date, DATE_PART('doy', date) - DATE_PART('doy', NOW()) as days FROM birthdays WHERE DATE_PART('doy', date) - DATE_PART('doy', NOW()) > 0 ORDER BY 3 LIMIT 1")
+    query = db.text("select governor, date, (case when to_char(date, 'MM-DD') >= to_char(now(), 'MM-DD') then "
+                    "to_date(to_char(current_date, 'YYYY') || '-' || to_char(date, 'MM-DD'), 'YYYY-MM-DD') else "
+                    "to_date(to_char(current_date, 'YYYY') || '-' || to_char(date, 'MM-DD'), 'YYYY-MM-DD') + interval "
+                    "'1 year' end) from birthdays order by 3")
     row = await db.first(query)
     return row
 
