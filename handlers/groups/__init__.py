@@ -1,0 +1,1 @@
+from .send_random_gif import dp

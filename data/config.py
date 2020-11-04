@@ -14,11 +14,12 @@ ip = os.getenv("ip")
 POSTGRES_USER = str(os.getenv("POSTGRES_USER"))
 POSTGRES_PASSWORD = str(os.getenv("POSTGRES_PASSWORD"))
 POSTGRES_DB = str(os.getenv("POSTGRES_DB"))
-PG_HOST = ip  # Если вы запускаете базу не через докер!
+# PG_HOST = ip  # Если вы запускаете базу не через докер!
+PG_HOST = 'database-1.co2ehvjv8n6t.us-east-2.rds.amazonaws.com'
 # PG_HOST = "db"  # Если вы запускаете базу через докер и у вас в services стоит название базы db
 POSTGRES_URI = f'postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{PG_HOST}/{POSTGRES_DB}'
 
-
+ILITA_CHAT_ID = os.getenv("ILITA_CHAT_ID")
 
 aiogram_redis = {
     'host': ip,
